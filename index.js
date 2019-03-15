@@ -3,6 +3,10 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
+/* BJF Current PATH */
+//const path = require('path');
+//global.appRoot = path.resolve(__dirname); //espacede nommage global
+
 /* Database configuration */
 const database = require('./app/config/dbconfig');
 
@@ -22,3 +26,7 @@ app.use(bodyParser.json());
 /* Router configuration */
 const REST_API_ROOT = '/api';
 app.use(REST_API_ROOT, require('./app/routes/router'));
+
+app.use('/static', express.static('static'));
+
+
