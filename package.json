@@ -9,7 +9,7 @@
     "csv": "^5.1.1",
     "csv-parse": "^4.3.1",
     "ejs": "*",
-    "express": "*",
+    "express": "^4.16.4",
     "path": "^0.12.7",
     "sqlite": "*"
   },

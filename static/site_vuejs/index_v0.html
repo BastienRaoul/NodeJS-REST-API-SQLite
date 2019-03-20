@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VueJS étape 1 </title>
+    <script src="../assets/vendor/Vue.js/vue.js"></script>
+
+
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="codePostal" list="codesPostaux">
+    <datalist id="codesPostaux">
+        <option v-for="codePostal in codesPostaux">{{codePostal}}</option>
+    </datalist>
+
+</div>
+<script src="../assets/JavaScript/site_vuejs_v0.js"></script>
+</body>
+</html>

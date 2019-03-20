@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VueJS étape 2 </title>
+    <script src="../assets/vendor/Vue.js/vue.js"></script>
+    <link rel="stylesheet" href="../assets/css/site_vuejs.css">
+
+
+</head>
+<body>
+<div id="app">
+    <h1> Choix </h1>
+    <div></div>
+    <input type="text" name="searchCategories" placeholder="Que cherchez vous" list="categories">
+    
+    <input type="text" v-model="codePostal" list="codesPostaux" v-on:input="codePostalChanged" placeholder="Où cherchez vous (Code Postal)">
+    <datalist id="codesPostaux">
+        <option v-for="codePostal in codesPostaux">{{codePostal}}</option>
+    </datalist>
+
+    <h1> Résultat </h1>
+    <h1>Info </h1>
+
+    <ul>
+        <li v-for="activiteLibelle in activitesLibelles" v-on:click="selectActivite(activiteLibelle)">
+    {{activiteLibelle}} </li>
+    </ul>
+
+    <div>
+    <p v-for="nomUsuelInstallation in nomsUsuelsInstallations">
+        {{nomUsuelInstallation}}
+    </p>
+    </div>
+</div>
+<script src="../assets/JavaScript/site_vuejs_v2.js"></script>
+</body>
+</html>

@@ -1,17 +1,12 @@
 const urlCodePostalTous = 'http://localhost:3000/api/installation/';
-const urlCodePostalTousActivite = 'http://localhost:3000/api/activite/';
 const urlActivite = 'http://localhost:3000/api/activite/code_postal/';
 
 class MonModele {
-    /*
-    Le constructeur
-     */
     constructor() {
-        this.installations = []; //La liste des informations
-        this.activites = []; //La liste des avtivite
-        this.codePostalSelectionne = null; //Le code postal séléctionné
+        this.installations = []; //Les maps me compliquent les transformations
+        this.activites = [];
+        this.codePostalSelectionne = null;
     }
-
 
     getInstallations() {
         return new Promise((resolve, reject) => {
@@ -33,32 +28,8 @@ class MonModele {
 
     }
 
-    //on refait pareil que pour installation mais pour activite je pense ??
-    getActivites() {
-        return new Promise((resolve, reject) => {
-            fetch(urlCodePostalTousActivite).then((response) => {
-                return response.json();
-            })
-                .then((data) => {
-                    this.activites = data;
-                    resolve(this.activites)
-                }).catch(() => {
-                this.activites = [];
-                this.codePostalSelectionne = null;
-                reject(this.installation);
-            });
-
-
-        });
-
-
-    }
-
     getCodePostaux() {
         return [...new Set(this.installations.map(element => element.codePostal))].sort();
-    }
-    getCodePostauxActivite() {
-        return [...new Set(this.activites.map(element => element.codePostal))].sort();
     }
 
     selectCodePostal(codePstal) {
@@ -89,33 +60,23 @@ class MonModele {
         return installations;
     }
 }
-const monModele = new MonModele();
+
 const app = new Vue({
     el: '#app',
     data() {
         return {
             codePostal: '',
-            codesPostaux: [],
-            activitesLibelles: [],
-            nomsUsuelsInstallations: [],
-
+            codesPostaux: []
 
         }
     },
     created() {
-      //monModele.selectCodePostal().then(()=> this.activites = monModele.getActivitesLibelles());
-        monModele.getActivites().then(() => this.activites = monModele.getActivitesLibelles());
+        const monModele = new MonModele();
         monModele.getInstallations().then(() => this.codesPostaux = monModele.getCodePostaux());
     },
     methods: {
         codePostalChanged: function(e){
-            monModele.selectCodePostal(this.codePostal).then(()=> this.activitesLibelles = monModele.getActivitesLibelles());
-        },
-        selectActivite: function(activiteLibelle) {
-            this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle);
-            console.log(this.nomsUsuelsInstallations);
+            console.log(this.codePostal);
         }
     }
-
-
 })

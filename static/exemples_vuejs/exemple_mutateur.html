@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" type="text/javascript"></script>
+</head>
+<body>
+
+<form id="tuto">
+    <div class="form-group">
+        <input type="texte" class="form-control" v-model="nomComplet">
+    </div>
+    <p>Le nom est : {{ responsable.nom }}</p>
+    <p>Le prénom est : {{ responsable.prenom }}</p>
+
+</form>
+
+<script>
+    new Vue({
+        el: '#tuto',
+        data: {
+            responsable: {nom: "Claret", prenom: "Marcel"}
+        },
+        computed: {
+            nomComplet: {
+                get: function () {
+                    return this.responsable.nom + ' ' + this.responsable.prenom;
+                },
+                set: function (value) {
+                    var nom = value.split(' ');
+                    this.responsable.nom = nom[0];
+                    this.responsable.prenom = nom[1];
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

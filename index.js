@@ -28,3 +28,5 @@ const REST_API_ROOT = '/api';
 app.use(REST_API_ROOT, require('./app/routes/router'));
 
 app.use('/static', express.static('static'));
+
+

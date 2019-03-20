@@ -14,7 +14,15 @@ class ActiviteController {
         this.common = new ControllerCommon();
     }
 
-
+    /**
+     * Finds all entities.
+     * @return all entities
+     */
+    findAll(res) {
+            this.activiteDao.findAll()
+            .then(this.common.findSuccess(res))
+            .catch(this.common.findError(res));
+    };
 
     findByCodePostal(req,res){
         const codePostal = req.params.code_postal;
