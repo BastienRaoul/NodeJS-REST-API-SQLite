@@ -6,6 +6,8 @@ class MonModele {
     /*
     Le constructeur
      */
+
+     //todo: filtres:
     constructor() {
         this.installations = []; //La liste des informations
         this.activites = []; //La liste des avtivite
@@ -98,15 +100,27 @@ const app = new Vue({
             codesPostaux: [],
             activitesLibelles: [],
             nomsUsuelsInstallations: [],
-
+            search: ''
 
         }
     },
     created() {
-      //monModele.selectCodePostal().then(()=> this.activites = monModele.getActivitesLibelles());
-        monModele.getActivites().then(() => this.activites = monModele.getActivitesLibelles());
         monModele.getInstallations().then(() => this.codesPostaux = monModele.getCodePostaux());
+        monModele.getActivites().then(() => this.activitesLibelles = monModele.getActivitesLibelles());
     },
+
+ //    mounted() {
+ //   monModele.selectCodePostal().then(()=> this.activites = monModele.getActivitesLibelles());
+ // },
+
+    computed: {
+      filteredList() {
+        return this.activitesLibelles.filter(res => {
+          return res.toLowerCase().includes(this.search.toLowerCase())
+        })
+      }
+    },
+
     methods: {
         codePostalChanged: function(e){
             monModele.selectCodePostal(this.codePostal).then(()=> this.activitesLibelles = monModele.getActivitesLibelles());
@@ -115,6 +129,7 @@ const app = new Vue({
             this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle);
             console.log(this.nomsUsuelsInstallations);
         }
+
     }
 
 

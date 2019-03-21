@@ -12,19 +12,18 @@
 <div id="app">
     <h1> Choix </h1>
     <div></div>
-    <input type="text" name="searchCategories" placeholder="Que cherchez vous" list="categories">
-    
-    <input type="text" v-model="codePostal" list="codesPostaux" v-on:input="codePostalChanged" placeholder="Où cherchez vous (Code Postal)">
-    <datalist id="codesPostaux">
-        <option v-for="codePostal in codesPostaux">{{codePostal}}</option>
-    </datalist>
 
+    <input type="text" v-model="search" list="activites" placeholder="Quel activités cherchez vous ?)">
+    <!-- <datalist id="activites">
+        <option v-for="activite in activites">{{activite}}</option>
+    </datalist> -->
+    <div></div>
     <h1> Résultat </h1>
     <h1>Info </h1>
 
     <ul>
-        <li v-for="activiteLibelle in activitesLibelles" v-on:click="selectActivite(activiteLibelle)">
-    {{activiteLibelle}} </li>
+        <li v-for="(activite, i) in filteredList" :key="i" v-on:click="selectActivite(activite)">
+    {{activite}} </li>
     </ul>
 
     <div>
