@@ -43,6 +43,31 @@ class EquipementDao {
 
     }
 
+    findAll(noDeLInstallation){
+        const sqlRequest = "select numero_de_la_fiche_equipement, "+
+            "installation.numero_de_l_installation, installation.nom_usuel_de_l_installation, "+
+            "installation.nom_de_la_commune, installation.code_postal " +
+            "from equipement " +
+            "inner join installation on installation.numero_de_l_installation=equipement.numero_de_l_installation ";
+        const sqlParams = {
+            $noDeLInstallation: noDeLInstallation
+         };
+
+        return this.common.findAllWithParams(sqlRequest, sqlParams).then(rows => {
+
+            let equipements = [];
+
+            for (const row of rows) {
+                equipements.push(new Equipement(row.numero_de_la_fiche_equipement,
+                                                new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune)));
+
+            }
+
+            return equipements;
+        });
+
+    }
+
 
 
 }

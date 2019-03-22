@@ -14,7 +14,15 @@ class EquipementController {
         this.common = new ControllerCommon();
     }
 
-
+    /**
+     * Finds all entities.
+     * @return all entities
+     */
+    findAll(res) {
+            this.equipementDao.findAll()
+            .then(this.common.findSuccess(res))
+            .catch(this.common.findError(res));
+    };
 
     findByNoDeLInstallation(req,res){
         const noDeLInstallation = req.params.no_de_l_installation;

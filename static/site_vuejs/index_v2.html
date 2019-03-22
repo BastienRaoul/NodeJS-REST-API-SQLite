@@ -13,23 +13,27 @@
     <h1> Choix </h1>
     <div></div>
 
-    <input type="text" v-model="search" list="activites" placeholder="Quel activités cherchez vous ?)">
-    <!-- <datalist id="activites">
-        <option v-for="activite in activites">{{activite}}</option>
-    </datalist> -->
-    <div></div>
+    <input type="text" v-model="search" placeholder="Quel activités cherchez vous ?)">
+    <div><input type="checkbox" id="checkbox" name="handicap" v-model="checked">Handicap
+      <label for="checkbox">{{checked}}</label>
+
+    </div>
+
     <h1> Résultat </h1>
     <h1>Info </h1>
 
     <ul>
         <li v-for="(activite, i) in filteredList" :key="i" v-on:click="selectActivite(activite)">
-    {{activite}} </li>
+          {{activite}}
+        </li>
     </ul>
 
     <div>
-    <p v-for="nomUsuelInstallation in nomsUsuelsInstallations">
-        {{nomUsuelInstallation}}
-    </p>
+      <ul>
+        <li v-for="nomUsuelInstallation in nomsUsuelsInstallations" v-on:click="selectInstallation(nomUsuelInstallation)">
+          {{nomUsuelInstallation}}
+        </li>
+      </ul>
     </div>
 </div>
 <script src="../assets/JavaScript/site_vuejs_v2.js"></script>
