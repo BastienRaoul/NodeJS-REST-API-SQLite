@@ -71,7 +71,7 @@
                       </v-layout>
                     </v-container>
                 </v-item-group>
-            </template>        
+            </template> 
           <v-card>
             <template>
               <div class="text-xs-center">
@@ -82,13 +82,17 @@
                         <v-card-title>
                         <span class="headline">Lieu de pratique</span>
                         </v-card-title>
-                        <v-card-text>
-                          <a href="" target="_blank">
-                            <p v-for="nomUsuelInstallation in nomsUsuelsInstallations" v-on:click="selectInstallation(nomUsuelInstallation)">{{nomUsuelInstallation}}</p>
-                          </a>
+                        <v-card-text>                 
+                          <v-list>
+                            <template v-for="(nomUsuelInstallation,i) in nomsUsuelsInstallations" :key="i">   
+                              <v-list-tile v-on:click="selectInstallation(nomUsuelInstallation)">
+                                <v-list-tile-title :key="i">{{nomUsuelInstallation}}</v-list-tile-title>
+                              </v-list-tile>
+                            </template>
+                          </v-list>
                         </v-card-text>
                       </v-flex>
-<!--                  <v-flex xs6>  
+<!--                      <v-flex xs6>  
                         <v-card-text>
                           <div id="mapid"></div>
                         </v-card-text>                         

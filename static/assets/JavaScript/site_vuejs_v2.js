@@ -171,9 +171,12 @@ const app = new Vue({
             this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle);
             console.log(this.nomsUsuelsInstallations);
         }
-        // selectInstallation: function(nomUsuelInstallation) {
-        //     this.equipementsDonner = monModele.getEquipementBynomUsuelsInstallation(nomUsuelInstallation);
-        //     console.log(this.equipementsDonner);
-        // }
+        /*selectInstallation: function(nomUsuelInstallation) {
+            this.equipementsDonner = monModele.getEquipementBynomUsuelsInstallation(nomUsuelInstallation);
+            console.log(this.equipementsDonner);
+
+            this.installations = monModele.getInstallation(activiteLibelle);            
+            var coord = this.installations[i].localisation.split(',');
+        }      */  
     }
 })
