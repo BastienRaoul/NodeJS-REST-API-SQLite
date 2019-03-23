@@ -11,7 +11,8 @@
     "ejs": "*",
     "express": "^4.16.4",
     "path": "^0.12.7",
-    "sqlite": "*"
+    "sqlite": "*",
+    "sqlite3": "^4.0.6"
   },
   "license": "LGPL-3.0",
   "bugs": {
