@@ -45,8 +45,8 @@
                   true-value="Oui"
                   false-value="Non">
                   <label for="checkboxMobilite">
-                    <i v-if="handicapMobilite" class="fas fa-wheelchair" style="color: green;"></i>
-                    <i v-if="!handicapMobilite" class="fas fa-wheelchair" style="color: red;"></i>
+                    <i v-if="handicapMobilite == 'Oui'" class="fas fa-wheelchair" style="color: green;"></i>
+                    <i v-if="handicapMobilite == 'Non'" class="fas fa-wheelchair" style="color: red;"></i>
                   </label>
                   <input type="checkbox" id="checkboxSensoriel" name="handicapSensoriel" v-model="handicapSensoriel" @change="handicapChanged()"
                   true-value="Oui"
