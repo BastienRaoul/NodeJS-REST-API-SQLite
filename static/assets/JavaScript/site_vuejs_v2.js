@@ -193,5 +193,12 @@ const app = new Vue({
             // Quand un clique est fait sur une activité on affiche les installation de celle-ci
             this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle, this.handicapMobilite, this.handicapSensoriel);
         }
+        /*selectInstallation: function(nomUsuelInstallation) {
+            this.equipementsDonner = monModele.getEquipementBynomUsuelsInstallation(nomUsuelInstallation);
+            console.log(this.equipementsDonner);
+
+            this.installations = monModele.getInstallation(activiteLibelle);            
+            var coord = this.installations[i].localisation.split(',');
+        }      */  
     }
 })
