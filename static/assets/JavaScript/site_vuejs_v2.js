@@ -30,7 +30,7 @@ class MonModele {
         });
     }
 
-    //on refait pareil que pour installation mais pour activite
+    //on refait pareil que pour installation mais pour activite, ce qui permet de récupérer les activités
     getActivites() {
         return new Promise((resolve, reject) => {
             fetch(urlCodePostalTousActivite).then((response) => {
@@ -92,27 +92,32 @@ class MonModele {
         console.log("installation get" + installations);
         return installations;
     }
-
+    // Gère la recheche avec la gestion des handicaps
     applyHandicapOnActivities(activitesList, handicapMobilite, handicapSensoriel){
-      let activitiesHandicapMobilite = [];
-      let activitiesHandicapSensoriel = [];
+      let activitiesHandicapMobilite = []; // tableau pour mobilité
+      let activitiesHandicapSensoriel = []; // tableau pour Sensoriel
       let hasHandicap = false;
+
+      //Si handicapMobilite = Oui alors on affecte au tableau activitiesHandicapMobilite toutes les activités qui ont des installations correspondant
       if (handicapMobilite == "Oui"){
         activitiesHandicapMobilite = activitesList.filter(activite => activite.equipement.installation.accessibilite_handicapes_a_mobilite_reduite == handicapMobilite);
         hasHandicap = true;
       }
-
+      //Si handicapSensoriel = Oui alors on affecte au tableau activitiesHandicapSensoriel toutes les activités qui ont des installations correspondant
       if (handicapSensoriel == "Oui"){
         activitiesHandicapSensoriel = activitesList.filter(activite => activite.equipement.installation.accessibilite_handicapes_sensoriels == handicapSensoriel);
         hasHandicap = true;
       }
 
+      // Si les deux sont vrai on fait une intersection
       if (handicapSensoriel == "Oui" && handicapMobilite == "Oui") {
         let intersection =
             [...activitiesHandicapMobilite].filter(x => activitiesHandicapSensoriel.includes(x));
           return intersection;
+        //sinon on fait concatène les deux tableaux
       }else if (hasHandicap) {
         return activitiesHandicapMobilite.concat(activitiesHandicapSensoriel);
+        //si aucun des cas précedent est vrai on affiche les acivités sans modification
       }else{
         return activitesList;
       }
@@ -129,14 +134,15 @@ const app = new Vue({
             nomsUsuelsInstallations: [],
             search: '',
             carte: '',
-            handicapMobilite: "Non",
-            handicapSensoriel: "Non",
+            handicapMobilite: "Non", // valeur de la checkbox
+            handicapSensoriel: "Non",  // valeur de la checkbox
             dialog: false,
             equipementsDonner: []
 
         }
     },
     created() {
+        // on récupère les codesPostaux et les activités
         monModele.getInstallations().then(() => this.codesPostaux = monModele.getCodePostaux());
         monModele.getActivites().then(() => this.activitesLibelles = monModele.getActivitesLibelles());
     },
@@ -150,7 +156,7 @@ const app = new Vue({
     },
 
     computed: {
-      //permet d'afficher dynamiquement les activite en fontion de la recherche
+      //permet d'afficher dynamiquement les activite en fontion de la recherche faites par la personne
       filteredList() {
           return this.activitesLibelles.filter(res => {
             return res.toLowerCase().includes(this.search.toLowerCase());
@@ -159,17 +165,23 @@ const app = new Vue({
     },
 
     methods: {
+        //Quand on appui sur une des deux checkbox pour les handicapés
         handicapChanged: function(){
           activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
           this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
         },
+        //Quand le code postal est changé
         codePostalChanged: function(){
+          //Si le code postal n'est pas vide on cherche les acivités
           if(this.codePostal != ""){
+            // on attend la réponse de la promesse et on met a jour la liste d'activités par rapport au code Postal
+            // puis des handicap
             monModele.selectCodePostal(this.codePostal).then((data)=> {
               activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
               this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
             });
           }else{
+            // on attend la réponse de la promesse
             monModele.getActivites().then(() => {
               activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
               this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
@@ -178,6 +190,7 @@ const app = new Vue({
 
         },
         selectActivite: function(activiteLibelle) {
+            // Quand un clique est fait sur une activité on affiche les installation de celle-ci
             this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle, this.handicapMobilite, this.handicapSensoriel);
         }
         /*selectInstallation: function(nomUsuelInstallation) {
