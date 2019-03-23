@@ -1,37 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>VueJS étape 2 </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Activités à Nantes</title>
     <script src="../assets/vendor/Vue.js/vue.js"></script>
-    <link rel="stylesheet" href="../assets/css/site_vuejs.css">
-
-
+    <!-- Vuetifyjs -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <!-- Font -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="../assets/css/mdb.min.css" rel="stylesheet">
+    <!-- custom styles -->
+    <link href="../assets/css/site_vuejs.css" rel="stylesheet">
+    <!-- leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <!-- Leaflet's JS -->
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+    <!--Pour le regroupeur de marqueur-->
+    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css"/>
+    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css"/>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js'></script>
 </head>
 <body>
-<div id="app">
-    <h1> Choix </h1>
-    <div></div>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark transparent">
+        <a class="navbar-brand" href="#"><strong>Activité Nantes</strong></a>
+      </nav>
+     <img id="image" src="../assets/img/ImageBackground.png" class="img-fluid" alt="Background activités">
+    </header>
+ 
+    <div id="app">         
+        <div id="recherche">
+            <v-text-field id="field" label="Quel activité cherchez vous ?" box v-model="search" list="activites">
+            </v-text-field>
+        </div> 
+        <v-container>
+         <v-dialog v-model="dialog" width="60%">       
+             <template slot="activator">
+                 <v-item-group>
+                     <v-container grid-list-md >
+                         <v-layout wrap>                
+                             <v-flex v-for="(activite, i) in filteredList" :key="i" md3>
+                                 <v-item >
+                                     <v-card hover class="d-flex align-center" height="100%;" v-on:click="selectActivite(activite)"> 
+                                       <v-card-title primary-title>
+                                           <h6 :key="i">{{activite}}</h6>
+                                       </v-card-title>
+                                     </v-card>
+                                 </v-item>
+                             </v-flex>
+                        </v-layout> 
+                     </v-container>
+                 </v-item-group>
+             </template>        
+           <v-card>
+             <template>
+               <div class="text-xs-center">
+                 <v-card>
+                   <v-container grid-list-md>
+                     <v-layout wrap>
+                       <v-flex xs4>
+                         <v-card-title>
+                         <span class="headline">Titre activité</span>
+        <!--                      <h6 :key="i">{{activite}}</h6>  Sa marche pas-->
+                         </v-card-title>
+                         <v-card-text>
+                           <p v-for="nomUsuelInstallation in nomsUsuelsInstallations">{{nomUsuelInstallation}}</p>
+                         </v-card-text>
+                       </v-flex>
+                       <v-flex xs8>  
+                         <v-card-text>
+                           <div id="mapid"></div> <!-- Sa marche pas -->
+                         </v-card-text>                         
+                         <v-card-actions>
+                           <v-spacer></v-spacer>
+                           <v-btn color="primary" flat @click="dialog = false">Fermer</v-btn>
+                         </v-card-actions>
+                       </v-flex>
+                     </v-layout>
+                   </v-container>
+                 </v-card>
+               </div>
+             </template>
+           </v-card>
+         </v-dialog>
+        </v-container>
 
-    <input type="text" v-model="search" list="activites" placeholder="Quel activités cherchez vous ?)">
-    <!-- <datalist id="activites">
-        <option v-for="activite in activites">{{activite}}</option>
-    </datalist> -->
-    <div></div>
-    <h1> Résultat </h1>
-    <h1>Info </h1>
+      <!--  <div id="mapid"></div> -->
 
-    <ul>
-        <li v-for="(activite, i) in filteredList" :key="i" v-on:click="selectActivite(activite)">
-    {{activite}} </li>
-    </ul>
+  <!-- Travail de maxime -->
+  <!--  <div class="flex-container">
+         <div class="flex">
+           <v-container>
+             <v-layout row wrap>
+               <v-expansion-panel popout>
+                 <v-expansion-panel-content v-for="(activite, i) in filteredList" :key="i">
+                   <div slot="header" v-on:click="selectActivite(activite)">{{activite}}</div>
+                   <v-card>
+                     <v-card-text>
+                       <ul class="list-group">
+                         <a class="list-group-item" v-for="nomUsuelInstallation in nomsUsuelsInstallations">
+                           <i class="material-icons">place</i>
+                           {{nomUsuelInstallation}}
+                         </a>
+                       </ul>
+                     </v-card-text>
+                   </v-card>
+                 </v-expansion-panel-content>
+               </v-expansion-panel>
+             </v-layout>
+           </v-container>
+       </div>
+    </div> -->
 
-    <div>
-    <p v-for="nomUsuelInstallation in nomsUsuelsInstallations">
-        {{nomUsuelInstallation}}
-    </p>
     </div>
-</div>
 <script src="../assets/JavaScript/site_vuejs_v2.js"></script>
+<script src="../assets/JavaScript/script.js"></script>
+<!--vuetifyjs-->
+<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
 </body>
 </html>
