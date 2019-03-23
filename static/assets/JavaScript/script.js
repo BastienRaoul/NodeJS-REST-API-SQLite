@@ -6,8 +6,8 @@ function scrollTo( target ) {
 }  
 
 $(document).ready(function(){
-  $("#boxRecherche").on('click', function(event) {
+  $(".boxRecherche").on('click', function(event) {
 	event.preventDefault();
-  	scrollTo( $("#boxRecherche") );
+  	scrollTo( $(".boxRecherche") );
   });
 });	

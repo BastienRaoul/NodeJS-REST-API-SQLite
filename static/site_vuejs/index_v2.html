@@ -35,29 +35,31 @@
         <template>
           <v-container grid-list-md text-xs-center>
             <v-layout row wrap>
-              <v-flex xs8  id="boxRecherche">
+              <v-flex xs5  class="boxRecherche">
                 <v-text-field id="field" label="Quel activité cherchez vous ?" box v-model="search"></v-text-field>
+              </v-flex>
+              <v-flex xs5  class="boxRecherche">
                 <v-text-field id="fieldCodePostal" label="Code Postal ?" box v-model="codePostal" v-on:keyup="codePostalChanged()"></v-text-field>
               </v-flex>
-              <v-flex align-self-center>
+              <v-flex align-self-center x2>
                 <div>
-                  <input type="checkbox" id="checkboxMobilite" name="handicapMobilite" v-model="handicapMobilite" @change="handicapChanged()"
-                  true-value="Oui"
-                  false-value="Non">
+                  <input type="checkbox" id="checkboxMobilite" name="handicapMobilite" v-model="handicapMobilite" @change="handicapChanged()" true-value="Oui" false-value="Non">
                   <label for="checkboxMobilite">
                     <i v-if="handicapMobilite == 'Oui'" class="fas fa-wheelchair" style="color: green;"></i>
                     <i v-if="handicapMobilite == 'Non'" class="fas fa-wheelchair" style="color: red;"></i>
                   </label>
-                  <input type="checkbox" id="checkboxSensoriel" name="handicapSensoriel" v-model="handicapSensoriel" @change="handicapChanged()"
-                  true-value="Oui"
-                  false-value="Non"><label for="checkboxSensoriel">Handicap Sensoriel</label>
+                  <input type="checkbox" id="checkboxSensoriel" name="handicapSensoriel" v-model="handicapSensoriel" @change="handicapChanged()" true-value="Oui" false-value="Non">
+                  <label for="checkboxSensoriel">
+                    <i v-if="handicapSensoriel == 'Oui'" class="fas fa-deaf" style="color: green;"></i>
+                    <i v-if="handicapSensoriel == 'Non'" class="fas fa-deaf" style="color: red;"></i>
+                  </label>
                 </div>
               </v-flex>
             </v-layout>
           </v-container>
         </template>
       </div>
-<!--test-->
+
       <v-container>
         <v-dialog v-model="dialog" width="30%">
             <template slot="activator">
@@ -99,7 +101,7 @@
                       </v-flex>
 <!--                  <v-flex xs6>  
                         <v-card-text>
-                          <div id="mapid"></div>
+                          <div id="mapid"></div> Ne fonctionne pas
                         </v-card-text>
                       </v-flex>-->
                       <v-flex xs12>
