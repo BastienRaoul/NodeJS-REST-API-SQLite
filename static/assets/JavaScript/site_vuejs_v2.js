@@ -16,21 +16,21 @@ class MonModele {
         this.codePostalSelectionne = null; //Le code postal séléctionné
     }
 
-    getEquipements() {
-        return new Promise((resolve, reject) => {
-            fetch(urlCodePostalTousEquipement).then((response) => {
-                return response.json();
-            })
-                .then((data) => {
-                    this.equipements = data;
-                    resolve(this.equipements)
-                }).catch(() => {
-                this.equipements = [];
-                this.codePostalSelectionne = null;
-                reject(this.installation);
-            });
-        });
-    }
+    // getEquipements() {
+    //     return new Promise((resolve, reject) => {
+    //         fetch(urlCodePostalTousEquipement).then((response) => {
+    //             return response.json();
+    //         })
+    //             .then((data) => {
+    //                 this.equipements = data;
+    //                 resolve(this.equipements)
+    //             }).catch(() => {
+    //             this.equipements = [];
+    //             this.codePostalSelectionne = null;
+    //             reject(this.installation);
+    //         });
+    //     });
+    // }
 
     getInstallations() {
         return new Promise((resolve, reject) => {
@@ -106,12 +106,6 @@ class MonModele {
         console.log("installation get" + installations);
         return installations;
     }
-    getNomUsuelInstallationByActiviteLibelleHandicap(activiteLibelle) {
-        let installations = this.activites.filter(activite => activite.activiteLibelle == activiteLibelle).map(element => element.equipement.installation.accessibilite_handicapes_a_mobilite_reduite);
-        installations = [...new Set(installations)].sort();
-        console.log("installation get" + installations);
-        return installations;
-    }
     // getEquipementBynomUsuelsInstallation(nomUsuelInstallation) {
     //     let equipements = this.installations.filter(installation => installation.nomUsuelDeInstallation == nomUsuelInstallation).map(element => element.equipement.installation);
     //     equipements = [...new Set(equipements)].sort();
@@ -139,7 +133,7 @@ const app = new Vue({
     created() {
         monModele.getInstallations().then(() => this.codesPostaux = monModele.getCodePostaux());
         monModele.getActivites().then(() => this.activitesLibelles = monModele.getActivitesLibelles());
-        monModele.getEquipements().then(() => this.equipementsDonner = monModele.getEquipementsDonner());
+        //monModele.getEquipements().then(() => this.equipementsDonner = monModele.getEquipementsDonner());
     },
 
  //    mounted() {
@@ -186,11 +180,11 @@ const app = new Vue({
         selectActivite: function(activiteLibelle) {
             this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle);
             console.log(this.nomsUsuelsInstallations);
-        },
-        selectInstallation: function(nomUsuelInstallation) {
-            this.equipementsDonner = monModele.getEquipementBynomUsuelsInstallation(nomUsuelInstallation);
-            console.log(this.equipementsDonner);
         }
+        // selectInstallation: function(nomUsuelInstallation) {
+        //     this.equipementsDonner = monModele.getEquipementBynomUsuelsInstallation(nomUsuelInstallation);
+        //     console.log(this.equipementsDonner);
+        // }
     }
 })
 
