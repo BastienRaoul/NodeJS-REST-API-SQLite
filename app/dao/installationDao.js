@@ -1,4 +1,3 @@
-/* Load Car entity */
 const Installation = require('../model/installation');
 
 /* Load DAO Common functions */
@@ -27,7 +26,7 @@ class InstallationDao {
             let installations = [];
 
             for (const row of rows) {
-               installations.push(new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune));
+               installations.push(new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune, row.accessibilite_handicapes_a_mobilite_reduite));
             }
 
             return installations;
@@ -45,16 +44,13 @@ class InstallationDao {
             let installations = [];
 
             for (const row of rows) {
-                installations.push(new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune));
+                installations.push(new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune, row.accessibilite_handicapes_a_mobilite_reduite));
             }
 
             return installations;
         });
 
     }
-
-
-
 }
 
 module.exports = InstallationDao;
