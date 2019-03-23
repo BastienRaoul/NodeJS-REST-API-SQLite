@@ -27,6 +27,7 @@ const createInstallation = function() {
             "nom_de_la_commune TEXT NOT NULL, " +
             "localisation TEXT NOT NULL, " +
             "accessibilite_handicapes_a_mobilite_reduite INTEGER NOT NULL, " +
+            "accessibilite_handicapes_sensoriels INTEGER NOT NULL, " +
             "PRIMARY KEY (numero_de_l_installation))";
 
         db.run(sqlRequest,[], (err) => {
@@ -111,15 +112,16 @@ const populateInstallation =  function() {
             let row;
 
             while (row = this.read()) {
-                    const sqlRequest = "INSERT OR IGNORE into installation (numero_de_l_installation, nom_usuel_de_l_installation, code_postal, nom_de_la_commune, localisation, accessibilite_handicapes_a_mobilite_reduite) " +
-                        "VALUES ($noDeLInstallation, $nomUsuelDeLInstallation, $codePostal, $nomDeLaCommune, $localisation, $accessibilite_handicapes_a_mobilite_reduite)";
+                    const sqlRequest = "INSERT OR IGNORE into installation (numero_de_l_installation, nom_usuel_de_l_installation, code_postal, nom_de_la_commune, localisation, accessibilite_handicapes_a_mobilite_reduite, accessibilite_handicapes_sensoriels) " +
+                        "VALUES ($noDeLInstallation, $nomUsuelDeLInstallation, $codePostal, $nomDeLaCommune, $localisation, $accessibilite_handicapes_a_mobilite_reduite, $accessibilite_handicapes_sensoriels)";
                     const sqlParams = {
                         $noDeLInstallation: row.numero_de_l_installation,
                         $nomUsuelDeLInstallation: row.nom_usuel_de_l_installation,
                         $codePostal: String(row.code_postal),
                         $nomDeLaCommune: String(row.nom_de_la_commune),
                         $localisation: String(row.localisation),
-                        $accessibilite_handicapes_a_mobilite_reduite: String(row.accessibilite_handicapes_a_mobilite_reduite)
+                        $accessibilite_handicapes_a_mobilite_reduite: String(row.accessibilite_handicapes_a_mobilite_reduite),
+                        $accessibilite_handicapes_sensoriels: String(row.accessibilite_handicapes_sensoriels)
                     };
 
 
