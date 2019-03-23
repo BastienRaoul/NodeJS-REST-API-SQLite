@@ -8,28 +8,10 @@ class MonModele {
     Le constructeur
      */
 
-     //todo: filtres:
     constructor() {
         this.installations = []; //La liste des informations
         this.activites = []; //La liste des avtivite
-        this.equipements = []; // liste equipement
         this.codePostalSelectionne = null; //Le code postal séléctionné
-    }
-
-    getEquipements() {
-        return new Promise((resolve, reject) => {
-            fetch(urlCodePostalTousEquipement).then((response) => {
-                return response.json();
-            })
-                .then((data) => {
-                    this.equipements = data;
-                    resolve(this.equipements)
-                }).catch(() => {
-                this.equipements = [];
-                this.codePostalSelectionne = null;
-                reject(this.installation);
-            });
-        });
     }
 
     getInstallations() {
@@ -72,9 +54,9 @@ class MonModele {
         return [...new Set(this.activites.map(element => element.codePostal))].sort();
     }
 
-    selectCodePostal(codePstal) {
+    selectCodePostal(codePostal, handicap) {
         return new Promise((resolve, reject) => {
-            fetch(urlActivite + codePstal).then((response) => {
+            fetch(urlActivite + codePostal).then((response) => {
                 return response.json();
             })
                 .then((data) => {
@@ -94,28 +76,47 @@ class MonModele {
         }))].sort();
     }
 
-    // getActivitesLibelles() {
-    //     return [...new Set(this.activites)].sort();
-    // }
+    getActivitesLibellesFromActivitiesList(tmpActivites) {
+        return [...new Set(tmpActivites.map(function (element) {
 
-    getEquipementsDonner() {
-        return [...new Set(this.equipements.map(function (element) {
-            return element.equipement;
+            return element.activiteLibelle;
         }))].sort();
     }
 
-    getNomUsuelInstallationByActiviteLibelle(activiteLibelle) {
-        let installations = this.activites.filter(activite => activite.activiteLibelle == activiteLibelle).map(element => element.equipement.installation.nomUsuelDeLInstallation);
+    getNomUsuelInstallationByActiviteLibelle(activiteLibelle, handicapMobilite, handicapSensoriel) {
+        let installations = this.applyHandicapOnActivities(this.activites, handicapMobilite, handicapSensoriel)
+          .filter(activite => activite.activiteLibelle == activiteLibelle)
+          .map(element => element.equipement.installation.nomUsuelDeLInstallation);
+
         installations = [...new Set(installations)].sort();
         console.log("installation get" + installations);
         return installations;
     }
-    // getEquipementBynomUsuelsInstallation(nomUsuelInstallation) {
-    //     let equipements = this.installations.filter(installation => installation.nomUsuelDeInstallation == nomUsuelInstallation).map(element => element.equipement.installation);
-    //     equipements = [...new Set(equipements)].sort();
-    //     console.log("equipement get" + equipements);
-    //     return equipements;
-    // }
+
+    applyHandicapOnActivities(activitesList, handicapMobilite, handicapSensoriel){
+      let activitiesHandicapMobilite = [];
+      let activitiesHandicapSensoriel = [];
+      let hasHandicap = false;
+      if (handicapMobilite == "Oui"){
+        activitiesHandicapMobilite = activitesList.filter(activite => activite.equipement.installation.accessibilite_handicapes_a_mobilite_reduite == handicapMobilite);
+        hasHandicap = true;
+      }
+
+      if (handicapSensoriel == "Oui"){
+        activitiesHandicapSensoriel = activitesList.filter(activite => activite.equipement.installation.accessibilite_handicapes_sensoriels == handicapSensoriel);
+        hasHandicap = true;
+      }
+
+      if (handicapSensoriel == "Oui" && handicapMobilite == "Oui") {
+        let intersection =
+            [...activitiesHandicapMobilite].filter(x => activitiesHandicapSensoriel.includes(x));
+          return intersection;
+      }else if (hasHandicap) {
+        return activitiesHandicapMobilite.concat(activitiesHandicapSensoriel);
+      }else{
+        return activitesList;
+      }
+    }
 }
 const monModele = new MonModele();
 const app = new Vue({
@@ -128,8 +129,9 @@ const app = new Vue({
             nomsUsuelsInstallations: [],
             search: '',
             carte: '',
+            handicapMobilite: "Non",
+            handicapSensoriel: "Non",
             dialog: false,
-            checked: false,
             equipementsDonner: []
 
         }
@@ -137,7 +139,6 @@ const app = new Vue({
     created() {
         monModele.getInstallations().then(() => this.codesPostaux = monModele.getCodePostaux());
         monModele.getActivites().then(() => this.activitesLibelles = monModele.getActivitesLibelles());
-        //monModele.getEquipements().then(() => this.equipementsDonner = monModele.getEquipementsDonner());
     },
     mounted() {
       //On récupère la liste des activités
@@ -151,25 +152,33 @@ const app = new Vue({
     computed: {
       //permet d'afficher dynamiquement les activite en fontion de la recherche
       filteredList() {
-        if (this.checked) {
-          return this.activitesLibelles.filter(res => {
-            return res.activiteLibelle.toLowerCase().includes(this.search.toLowerCase());
-        })
-      } else {
           return this.activitesLibelles.filter(res => {
             return res.toLowerCase().includes(this.search.toLowerCase());
           })
         }
-      }
     },
 
     methods: {
-        codePostalChanged: function(e){
-            monModele.selectCodePostal(this.codePostal).then(()=> this.activitesLibelles = monModele.getActivitesLibelles());
+        handicapChanged: function(){
+          activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
+          this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
+        },
+        codePostalChanged: function(){
+          if(this.codePostal != ""){
+            monModele.selectCodePostal(this.codePostal).then((data)=> {
+              activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
+              this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
+            });
+          }else{
+            monModele.getActivites().then(() => {
+              activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
+              this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
+            });
+          }
+
         },
         selectActivite: function(activiteLibelle) {
-            this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle);
-            console.log(this.nomsUsuelsInstallations);
+            this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle, this.handicapMobilite, this.handicapSensoriel);
         }
         /*selectInstallation: function(nomUsuelInstallation) {
             this.equipementsDonner = monModele.getEquipementBynomUsuelsInstallation(nomUsuelInstallation);

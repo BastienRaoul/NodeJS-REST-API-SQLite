@@ -35,17 +35,22 @@
         <template>
           <v-container grid-list-md text-xs-center>
             <v-layout row wrap>
-              <v-flex xs8  id="boxRecherche"> 
-                <v-text-field id="field" label="Quel activité cherchez vous ?" box v-model="search" list="activites"></v-text-field>
+              <v-flex xs8  id="boxRecherche">
+                <v-text-field id="field" label="Quel activité cherchez vous ?" box v-model="search"></v-text-field>
+                <v-text-field id="fieldCodePostal" label="Code Postal ?" box v-model="codePostal" v-on:keyup="codePostalChanged()"></v-text-field>
               </v-flex>
-              <v-flex xs4>
+              <v-flex align-self-center>
                 <div>
-                  <p>Installation accès handicapé</p>
-                  <input type="checkbox" id="checkbox" name="handicap" v-model="checked">
-                  <label for="checkbox">
-                    <i v-if="checked" class="fas fa-wheelchair" style="color: green;"></i>
-                    <i v-if="!checked" class="fas fa-wheelchair" style="color: red;"></i>
+                  <input type="checkbox" id="checkboxMobilite" name="handicapMobilite" v-model="handicapMobilite" @change="handicapChanged()"
+                  true-value="Oui"
+                  false-value="Non">
+                  <label for="checkboxMobilite">
+                    <i v-if="handicapMobilite == 'Oui'" class="fas fa-wheelchair" style="color: green;"></i>
+                    <i v-if="handicapMobilite == 'Non'" class="fas fa-wheelchair" style="color: red;"></i>
                   </label>
+                  <input type="checkbox" id="checkboxSensoriel" name="handicapSensoriel" v-model="handicapSensoriel" @change="handicapChanged()"
+                  true-value="Oui"
+                  false-value="Non"><label for="checkboxSensoriel">Handicap Sensoriel</label>
                 </div>
               </v-flex>
             </v-layout>
@@ -54,11 +59,11 @@
       </div>
 <!--test-->
       <v-container>
-        <v-dialog v-model="dialog" width="30%">       
+        <v-dialog v-model="dialog" width="30%">
             <template slot="activator">
                 <v-item-group>
                     <v-container grid-list-md >
-                        <v-layout wrap >                
+                        <v-layout wrap >
                             <v-flex v-for="(activite, i) in filteredList" :key="i" md3 overflow-hidden>
                                 <v-item >
                                     <v-card hover class="d-flex align-center" height="100%;" v-on:click="selectActivite(activite)">
@@ -92,12 +97,12 @@
                           </v-list>
                         </v-card-text>
                       </v-flex>
-<!--                      <v-flex xs6>  
+<!--                  <v-flex xs6>  
                         <v-card-text>
                           <div id="mapid"></div>
-                        </v-card-text>                         
+                        </v-card-text>
                       </v-flex>-->
-                      <v-flex xs12>                     
+                      <v-flex xs12>
                         <v-card-actions>
                           <v-spacer></v-spacer>
                           <v-btn color="primary" flat @click="dialog = false">Fermer</v-btn>
