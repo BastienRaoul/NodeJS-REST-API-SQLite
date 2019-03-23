@@ -26,7 +26,7 @@ class InstallationDao {
             let installations = [];
 
             for (const row of rows) {
-               installations.push(new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune, row.accessibilite_handicapes_a_mobilite_reduite));
+               installations.push(new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune, row.accessibilite_handicapes_a_mobilite_reduite, row.accessibilite_handicapes_sensoriels));
             }
 
             return installations;
@@ -44,7 +44,7 @@ class InstallationDao {
             let installations = [];
 
             for (const row of rows) {
-                installations.push(new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune, row.accessibilite_handicapes_a_mobilite_reduite));
+                installations.push(new Installation(row.numero_de_l_installation, row.nom_usuel_de_l_installation, row.code_postal, row.nom_de_la_commune, row.accessibilite_handicapes_a_mobilite_reduite, row.accessibilite_handicapes_sensoriels));
             }
 
             return installations;

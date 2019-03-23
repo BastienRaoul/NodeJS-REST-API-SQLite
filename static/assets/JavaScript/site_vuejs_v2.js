@@ -72,9 +72,9 @@ class MonModele {
         return [...new Set(this.activites.map(element => element.codePostal))].sort();
     }
 
-    selectCodePostal(codePstal) {
+    selectCodePostal(codePostal, handicap) {
         return new Promise((resolve, reject) => {
-            fetch(urlActivite + codePstal).then((response) => {
+            fetch(urlActivite + codePostal).then((response) => {
                 return response.json();
             })
                 .then((data) => {
@@ -94,9 +94,12 @@ class MonModele {
         }))].sort();
     }
 
-    // getActivitesLibelles() {
-    //     return [...new Set(this.activites)].sort();
-    // }
+    getActivitesLibellesFromActivitiesList(tmpActivites) {
+        return [...new Set(tmpActivites.map(function (element) {
+
+            return element.activiteLibelle;
+        }))].sort();
+    }
 
     getEquipementsDonner() {
         return [...new Set(this.equipements.map(function (element) {
@@ -104,12 +107,41 @@ class MonModele {
         }))].sort();
     }
 
-    getNomUsuelInstallationByActiviteLibelle(activiteLibelle) {
-        let installations = this.activites.filter(activite => activite.activiteLibelle == activiteLibelle).map(element => element.equipement.installation.nomUsuelDeLInstallation);
+    getNomUsuelInstallationByActiviteLibelle(activiteLibelle, handicapMobilite, handicapSensoriel) {
+        let installations = this.applyHandicapOnActivities(this.activites, handicapMobilite, handicapSensoriel)
+          .filter(activite => activite.activiteLibelle == activiteLibelle)
+          .map(element => element.equipement.installation.nomUsuelDeLInstallation);
+
         installations = [...new Set(installations)].sort();
         console.log("installation get" + installations);
         return installations;
     }
+
+    applyHandicapOnActivities(activitesList, handicapMobilite, handicapSensoriel){
+      let activitiesHandicapMobilite = [];
+      let activitiesHandicapSensoriel = [];
+      let hasHandicap = false;
+      if (handicapMobilite == "Oui"){
+        activitiesHandicapMobilite = activitesList.filter(activite => activite.equipement.installation.accessibilite_handicapes_a_mobilite_reduite == handicapMobilite);
+        hasHandicap = true;
+      }
+
+      if (handicapSensoriel == "Oui"){
+        activitiesHandicapSensoriel = activitesList.filter(activite => activite.equipement.installation.accessibilite_handicapes_sensoriels == handicapSensoriel);
+        hasHandicap = true;
+      }
+
+      if (handicapSensoriel == "Oui" && handicapMobilite == "Oui") {
+        let intersection =
+            [...activitiesHandicapMobilite].filter(x => activitiesHandicapSensoriel.includes(x));
+          return intersection;
+      }else if (hasHandicap) {
+        return activitiesHandicapMobilite.concat(activitiesHandicapSensoriel);
+      }else{
+        return activitesList;
+      }
+    }
+
     // getEquipementBynomUsuelsInstallation(nomUsuelInstallation) {
     //     let equipements = this.installations.filter(installation => installation.nomUsuelDeInstallation == nomUsuelInstallation).map(element => element.equipement.installation);
     //     equipements = [...new Set(equipements)].sort();
@@ -129,7 +161,8 @@ const app = new Vue({
             search: '',
             dialog: false,
             carte: '',
-            checked: false,
+            handicapMobilite: "Non",
+            handicapSensoriel: "Non",
             equipementsDonner: []
 
         }
@@ -165,24 +198,40 @@ const app = new Vue({
     computed: {
       //permet d'afficher dynamiquement les activite en fontion de la recherche
       filteredList() {
-        if (this.checked) {
-          return this.activitesLibelles.filter(res => {
-            return res.activiteLibelle.toLowerCase().includes(this.search.toLowerCase());
-        })
-      } else {
+      //   if (this.handicap) {
+      //     return this.activitesLibelles.filter(res => {
+      //       return res.toLowerCase().includes(this.search.toLowerCase());
+      //   })
+      // } else {
           return this.activitesLibelles.filter(res => {
             return res.toLowerCase().includes(this.search.toLowerCase());
           })
         }
-      }
     },
 
     methods: {
-        codePostalChanged: function(e){
-            monModele.selectCodePostal(this.codePostal).then(()=> this.activitesLibelles = monModele.getActivitesLibelles());
+        handicapChanged: function(){
+          activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
+          this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
         },
+        codePostalChanged: function(){
+          if(this.codePostal != ""){
+            monModele.selectCodePostal(this.codePostal).then((data)=> {
+              console.log(data);
+              activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
+              this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
+            });
+          }else{
+            monModele.getActivites().then(() => {
+              activites = monModele.applyHandicapOnActivities(monModele.activites, this.handicapMobilite, this.handicapSensoriel);
+              this.activitesLibelles = monModele.getActivitesLibellesFromActivitiesList(activites);
+            });
+          }
+
+        },
+        // TODO CHECK INSTALL HANDICAP
         selectActivite: function(activiteLibelle) {
-            this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle);
+            this.nomsUsuelsInstallations = monModele.getNomUsuelInstallationByActiviteLibelle(activiteLibelle, this.handicapMobilite, this.handicapSensoriel);
             console.log(this.nomsUsuelsInstallations);
         }
         // selectInstallation: function(nomUsuelInstallation) {
@@ -213,29 +262,29 @@ const app = new Vue({
     //************************supprimer un élément*************************************************
     //cette commande sert à supprimer un élément sur la carte
     carte.removeLayer(influence);
- 
+
 //-----------------------------------------------------------------
- 
+
 // Cette petite méthode va permettre de générer un bulle d'information associer à un Marqueur
       marker.bindPopup('Salut'); // On associe un popup à un marker dans lequel on peut écrire un message par défaut en html
       var mapopup = marker.getPopup();// on la popup pour ensuite la manipuler
       mapopup.setContent('Salut, ça va ?');// on associe un message à la popup
       marker.openPopup();// cette commande permet d'ouvrir la popup dès l'affichage du marqueur
- 
+
 //-----------------------------------------------------------------
- 
+
 //Cette petite methode va nous permettre de déplacer un marker
 //création d'un marker avec l'option draggable pour le déplacer et le bindPopup("") pour lui associé une popup
 var marker2 = L.marker([47.2234, -1.600], {draggable:'true'}).bindPopup("").addTo(carte);
- 
+
 marker2.on('dragend', relachement);
- 
+
 function relachement(e) {
     marker2.getPopup().setContent(''+marker2.getLatLng());//ceci va permettre d'afficher les nouvelles coordonnées du marker
     marker2.openPopup();//permet de l'afficher dès le marker posé
 }
 //-----------------------------------------------------------------
- 
+
 // Les markers cluster Groups
  // Notre cluster
       var markers = L.markerClusterGroup();
@@ -245,14 +294,14 @@ function relachement(e) {
       var marker3 = L.marker([47.2494, -1.53547]);
       var marker4 = L.marker([47.2434, -1.53747]);
       var marker5 = L.marker([47.2434, -1.53947]);
- 
+
       // On ajoute les marqueurs au cluster
       markers.addLayer(marker1);
       markers.addLayer(marker2);
       markers.addLayer(marker3);
       markers.addLayer(marker4);
       markers.addLayer(marker5);
- 
+
       // On affiche le cluster
       carte.addLayer(markers);
       //-----------------------------------------------------------------*/

@@ -41,11 +41,17 @@
           <v-container grid-list-md text-xs-center>
             <v-layout row wrap>
               <v-flex>
-                <v-text-field id="field" label="Quel activité cherchez vous ?" box v-model="search" list="activites"></v-text-field>
+                <v-text-field id="field" label="Quel activité cherchez vous ?" box v-model="search"></v-text-field>
+                <v-text-field id="fieldCodePostal" label="Code Postal ?" box v-model="codePostal" v-on:keyup="codePostalChanged()"></v-text-field>
               </v-flex>
               <v-flex align-self-center>
-                <div><input type="checkbox" id="checkbox" name="handicap" v-model="checked">Handicap
-                  <label for="checkbox">{{checked}}</label>
+                <div>
+                  <input type="checkbox" id="checkboxMobilite" name="handicapMobilite" v-model="handicapMobilite" @change="handicapChanged()"
+                  true-value="Oui"
+                  false-value="Non"><label for="checkboxMobilite">Handicap Mobilité Réduite</label>
+                  <input type="checkbox" id="checkboxSensoriel" name="handicapSensoriel" v-model="handicapSensoriel" @change="handicapChanged()"
+                  true-value="Oui"
+                  false-value="Non"><label for="checkboxSensoriel">Handicap Sensoriel</label>
                 </div>
               </v-flex>
             </v-layout>
