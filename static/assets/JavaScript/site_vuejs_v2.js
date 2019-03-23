@@ -16,21 +16,21 @@ class MonModele {
         this.codePostalSelectionne = null; //Le code postal séléctionné
     }
 
-    // getEquipements() {
-    //     return new Promise((resolve, reject) => {
-    //         fetch(urlCodePostalTousEquipement).then((response) => {
-    //             return response.json();
-    //         })
-    //             .then((data) => {
-    //                 this.equipements = data;
-    //                 resolve(this.equipements)
-    //             }).catch(() => {
-    //             this.equipements = [];
-    //             this.codePostalSelectionne = null;
-    //             reject(this.installation);
-    //         });
-    //     });
-    // }
+    getEquipements() {
+        return new Promise((resolve, reject) => {
+            fetch(urlCodePostalTousEquipement).then((response) => {
+                return response.json();
+            })
+                .then((data) => {
+                    this.equipements = data;
+                    resolve(this.equipements)
+                }).catch(() => {
+                this.equipements = [];
+                this.codePostalSelectionne = null;
+                reject(this.installation);
+            });
+        });
+    }
 
     getInstallations() {
         return new Promise((resolve, reject) => {
@@ -94,6 +94,10 @@ class MonModele {
         }))].sort();
     }
 
+    // getActivitesLibelles() {
+    //     return [...new Set(this.activites)].sort();
+    // }
+
     getEquipementsDonner() {
         return [...new Set(this.equipements.map(function (element) {
             return element.equipement;
@@ -149,7 +153,7 @@ const app = new Vue({
       filteredList() {
         if (this.checked) {
           return this.activitesLibelles.filter(res => {
-            return res.toLowerCase().includes(this.search.toLowerCase());
+            return res.activiteLibelle.toLowerCase().includes(this.search.toLowerCase());
         })
       } else {
           return this.activitesLibelles.filter(res => {

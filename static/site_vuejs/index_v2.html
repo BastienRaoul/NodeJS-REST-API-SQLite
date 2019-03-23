@@ -29,9 +29,9 @@
       </nav>
      <img id="image" src="../assets/img/ImageBackground.png" class="img-fluid" alt="Background activités">
     </header>
- 
-    <div id="app">         
-      <div id="recherche">         
+
+    <div id="app">
+      <div id="recherche">
         <template>
           <v-container grid-list-md text-xs-center>
             <v-layout row wrap>
@@ -52,7 +52,7 @@
           </v-container>
         </template>
       </div>
-      
+
       <v-container>
         <v-dialog v-model="dialog" width="30%">       
             <template slot="activator">
@@ -61,18 +61,18 @@
                         <v-layout wrap >                
                             <v-flex v-for="(activite, i) in filteredList" :key="i" md3 overflow-hidden>
                                 <v-item >
-                                    <v-card hover class="d-flex align-center" height="100%;" v-on:click="selectActivite(activite)"> 
+                                    <v-card hover class="d-flex align-center" height="100%;" v-on:click="selectActivite(activite)">
                                       <v-card-title primary-title>
                                           <h6 :key="i">{{activite}}</h6>
                                       </v-card-title>
                                     </v-card>
                                 </v-item>
                             </v-flex>
-                      </v-layout> 
+                      </v-layout>
                     </v-container>
                 </v-item-group>
             </template>        
-          <v-card id="">
+          <v-card>
             <template>
               <div class="text-xs-center">
                 <v-card>

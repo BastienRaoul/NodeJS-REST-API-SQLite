@@ -26,7 +26,7 @@ const createInstallation = function() {
             "code_postal TEXT NOT NULL, " +
             "nom_de_la_commune TEXT NOT NULL, " +
             "localisation TEXT NOT NULL, " +
-            "accessibilite_handicapes_a_mobilite_reduite TEXT NOT NULL, " +
+            "accessibilite_handicapes_a_mobilite_reduite INTEGER NOT NULL, " +
             "PRIMARY KEY (numero_de_l_installation))";
 
         db.run(sqlRequest,[], (err) => {

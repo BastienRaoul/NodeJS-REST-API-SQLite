@@ -18,6 +18,13 @@ class ActiviteController {
      * Finds all entities.
      * @return all entities
      */
+     findByHandicap(req,res){
+         const accessibilite_handicapes_a_mobilite_reduite = req.params.accessibilite_handicapes_a_mobilite_reduite;
+         this.activiteDao.findByHandicap(accessibilite_handicapes_a_mobilite_reduite)
+             .then(this.common.findSuccess(res))
+             .catch(this.common.findError(res));
+     }
+
     findAll(res) {
             this.activiteDao.findAll()
             .then(this.common.findSuccess(res))
