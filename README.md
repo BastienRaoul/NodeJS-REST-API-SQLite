@@ -6,7 +6,7 @@ The code is written in ES6 and uses Promises.
 
 ## Installation :
 
-1. Clone this repository : `git clone https://github.com/romwaldtff/NodeJS-REST-API-SQLite.git`  
+1. Clone this repository : `git clone https://github.com/BastienRaoul/api_rest_nodejs.git`  
 2. Then install its dependencies : `npm install`
 
 ## Requirements :
