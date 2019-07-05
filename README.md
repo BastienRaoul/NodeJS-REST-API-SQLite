@@ -33,11 +33,6 @@ Alternatively, you can use `node index.js YOUR_PORT_NUMBER` to start the server 
 - [Sqlite](https://www.npmjs.com/package/sqlite), a wrapper library that adds ES6 promises and SQL-based migrations API to [sqlite3](https://www.npmjs.com/package/sqlite3)*.
 - [Bluebird](https://www.npmjs.com/package/bluebird) promise library.
 
-## Credits
-
-- Made by [Romuald Tuffreau](https://github.com/romwaldtff).
-- [Laurent Guerin](https://github.com/l-gu), creator of [Telosys Tools](https://sites.google.com/site/telosystools/).
-
 ## License
 
 This project uses the [LGPL v3 License](https://www.gnu.org/licenses/lgpl-3.0.en.html) (See the LICENSE file in this repository).
