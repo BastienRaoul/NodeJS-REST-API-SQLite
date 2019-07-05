@@ -1,5 +1,6 @@
 # NodeJS REST API SQLite
 
+Projet IUT Informatique.
 This project is a proof of concept (POC).  
 It's purpose is to demonstrate an implementation of a NodeJS REST API using SQLite as a database (sqlite.db).   
 The code is written in ES6 and uses Promises.
